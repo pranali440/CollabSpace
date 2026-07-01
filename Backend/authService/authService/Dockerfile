@@ -6,7 +6,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the JAR
-FROM eclipse-temurin:17-jre-slim
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/authService-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
