@@ -1,13 +1,9 @@
 package com.CollabSpace.authService.service;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-
 import jakarta.annotation.PostConstruct;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -26,18 +22,21 @@ public class JaaSTokenService {
     @Value("${jaas.api.key.id}")
     private String apiKeyId;
 
-    @Value("${jaas.private.key.path}")
-    private Resource privateKeyResource;
+    // ✅ Read from environment variable instead of file
+    @Value("${jaas.private.key.content:}")
+    private String privateKeyContent;
 
     private PrivateKey privateKey;
 
     @PostConstruct
     public void init() throws Exception {
-        // Read the PEM file from resources
-        String pem = new String(privateKeyResource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        if (privateKeyContent == null || privateKeyContent.isBlank()) {
+            System.out.println("WARNING: JAAS private key not configured, video call tokens will not work.");
+            return;
+        }
 
         // Strip PEM headers and whitespace
-        String privateKeyPEM = pem
+        String privateKeyPEM = privateKeyContent
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
                 .replaceAll("\\s+", "");
@@ -49,6 +48,10 @@ public class JaaSTokenService {
     }
 
     public String generateToken(String userEmail, String userName, boolean isModerator) {
+        if (privateKey == null) {
+            throw new RuntimeException("JAAS private key not configured.");
+        }
+
         long now = System.currentTimeMillis();
         long expiry = now + (3600 * 1000); // 1 hour
 
