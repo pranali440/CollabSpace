@@ -47,6 +47,10 @@ import html2pdf from "html2pdf.js";
 import { saveAs } from "file-saver";
 import { useMyContext } from "../../../store/ContextApi";
 
+const WS_URL = (import.meta.env.VITE_API_URL || "http://localhost:8081")
+  .replace("http://", "ws://")
+  .replace("https://", "wss://");
+
 const SEARCH_DRAWER_WIDTH = 380;
 
 const ImageBlot = Quill.import("formats/image");
@@ -244,9 +248,10 @@ const Notepad = ({ isCollaborative = true }) => {
 
     const connectWebSocket = () => {
       const token = localStorage.getItem("token");
-      wsRef.current = new WebSocket(
-        `ws://localhost:8081/ws/workspace/${workspaceId}?token=${token}`
-      );
+wsRef.current = new WebSocket(
+  `${WS_URL}/ws/workspace/${workspaceId}?token=${token}`
+);
+      
       wsRef.current.onopen = () => {
         reconnectAttempts.current = 0;
         toast.success("Collaboration enabled!");

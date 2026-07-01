@@ -23,6 +23,10 @@ import { motion } from "framer-motion";
 import { useMyContext } from "../../../store/ContextApi";
 import VideoCall from "../../Tools/VideoCall/VideoCall";
 
+const WS_URL = (import.meta.env.VITE_API_URL || "http://localhost:8081")
+  .replace("http://", "ws://")
+  .replace("https://", "wss://");
+
 const GroupDashboard = () => {
   const { workspaceId } = useParams();
   const navigate = useNavigate();
@@ -78,9 +82,8 @@ const GroupDashboard = () => {
   
   const token = localStorage.getItem("token"); // ✅ get token
   wsRef.current = new WebSocket(
-    `ws://localhost:8081/ws/workspace/${workspaceId}?token=${token}` // ✅ localhost + token as query param
-  );
-
+  `${WS_URL}/ws/workspace/${workspaceId}?token=${token}`
+);
   wsRef.current.onopen = () => {
     console.log("WebSocket connected");
     retryCount = 0;

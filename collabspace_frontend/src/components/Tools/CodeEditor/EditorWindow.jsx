@@ -28,7 +28,9 @@ import { javascriptCompletions } from "./Autocomplete/javascriptCompletions";
 import ReactMarkdown from "react-markdown";
 import { useMyContext } from "../../../store/ContextApi";
 import { debounce } from "lodash";
-
+const WS_URL = (import.meta.env.VITE_API_URL || "http://localhost:8081")
+  .replace("http://", "ws://")
+  .replace("https://", "wss://");
 const EditorWindow = () => {
   const { workspaceId, sessionId } = useParams();
   const location = useLocation();
@@ -159,10 +161,10 @@ const EditorWindow = () => {
     }
 
     const token = localStorage.getItem("token");
-    const websocket = new WebSocket(
-      `ws://localhost:8081/ws/workspace/${workspaceId}?token=${token}`
-    );
-    wsRef.current = websocket;
+const websocket = new WebSocket(
+  `${WS_URL}/ws/workspace/${workspaceId}?token=${token}`
+);
+wsRef.current = websocket;
 
     websocket.onopen = () => {
       console.log("WebSocket connected for workspace:", workspaceId);

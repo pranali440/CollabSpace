@@ -13,7 +13,9 @@ import { ySyncPlugin, yCursorPlugin, yUndoPlugin } from "y-prosemirror";
 
 import { db } from "../../../services/firebase";
 import { ref, get, set, remove, onValue } from "firebase/database";
-
+const WS_URL = (import.meta.env.VITE_API_URL || "http://localhost:8081")
+  .replace("http://", "ws://")
+  .replace("https://", "wss://");
 const MenuBar = ({ editor }) => {
   const fileInputRef = useRef();
 
@@ -148,12 +150,12 @@ const CollaborativeEditor = ({ workspaceId }) => {
     ydocRef.current = ydoc;
 
     const token = localStorage.getItem("token");
-    const provider = new WebsocketProvider(
-      `ws://localhost:8081/ws/workspace`,
-      currentDocId,
-      ydoc,
-      { params: { token } }
-    );
+   const provider = new WebsocketProvider(
+  `${WS_URL}/ws/workspace`,
+  currentDocId,
+  ydoc,
+  { params: { token } }
+);
     providerRef.current = provider;
 
     const yXmlFragment = ydoc.getXmlFragment("prosemirror");

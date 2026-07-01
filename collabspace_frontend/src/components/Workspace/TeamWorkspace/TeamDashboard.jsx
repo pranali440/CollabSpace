@@ -18,6 +18,9 @@ import {
 import { format, isToday, isYesterday } from "date-fns";
 import KanbanBoard from "./Kanbanboard.jsx";
 import IdeasBoard from "./IdeasBoard.jsx";
+const WS_URL = (import.meta.env.VITE_API_URL || "http://localhost:8081")
+  .replace("http://", "ws://")
+  .replace("https://", "wss://");
 
 const TeamDashboard = () => {
   const { workspaceId } = useParams();
@@ -148,7 +151,7 @@ const TeamDashboard = () => {
     const connectWebSocket = () => {
       // ✅ FIX 1: correct WebSocket URL + token
       const token = localStorage.getItem("token");
-      wsRef.current = new WebSocket(`ws://localhost:8081/ws/workspace/${workspaceId}?token=${token}`);
+     wsRef.current = new WebSocket(`${WS_URL}/ws/workspace/${workspaceId}?token=${token}`);
 
       wsRef.current.onopen = () => {
         console.log("Team WebSocket connected for workspace:", workspaceId);
