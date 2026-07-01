@@ -121,8 +121,8 @@ const AboutPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" data-aos="fade-up">
           {[
-            { name: "Netra Nagpure", role: "Team Lead", image: "/team1.jpg" },
-            { name: "Pranali Pathare", role: "Frontend Developer", image: "/team2.jpg" },
+            { name: "Pranali Pathare", role: "Team Lead", image: "/team1.jpg" },
+            { name: "Netra Nagpure", role: "Frontend Developer", image: "/team2.jpg" },
             { name: "Pallavi Shinde", role: "Backend Developer", image: "/team3.jpg" },
             { name: "Sakshi Waghmare", role: "UI/UX Designer", image: "/team4.jpg" },
           ].map((member, index) => (
