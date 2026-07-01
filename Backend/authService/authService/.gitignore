@@ -1,0 +1,24 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# Secrets - never push these
+src/main/resources/application-local.properties
+src/main/resources/jaas-private-key.pem
+
+# IDE files
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+*.sts4-cache
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
