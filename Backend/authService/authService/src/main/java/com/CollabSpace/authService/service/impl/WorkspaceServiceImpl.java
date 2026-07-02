@@ -41,6 +41,18 @@ public class WorkspaceServiceImpl implements WorkSpaceService {
     @Override
     @Transactional // Keeps DB operations safe
     public WorkspaceDto createWorkspace(WorkspaceDto workspaceDto) {
+    	
+    	boolean exists = workspaceRepository.existsByWorkspaceNameAndOwnerAndType(
+    		    workspaceDto.getWorkspaceName(),
+    		    workspaceDto.getOwner(),
+    		    workspaceDto.getType()
+    		);
+    		if (exists) {
+    		    throw new IllegalArgumentException(
+    		        "A " + workspaceDto.getType() + " workspace with name '" + 
+    		        workspaceDto.getWorkspaceName() + "' already exists."
+    		    );
+    		}
         workspaceDto.setWorkspaceId(UUID.randomUUID().toString());
         workspaceDto.setCreatedDate(LocalDate.now());
         workspaceDto.setCreatedTime(LocalTime.now());

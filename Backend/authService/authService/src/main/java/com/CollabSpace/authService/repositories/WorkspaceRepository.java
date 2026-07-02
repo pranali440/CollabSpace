@@ -18,4 +18,6 @@ public interface WorkspaceRepository extends JpaRepository<Workspace,String> {
     @Query("SELECT w FROM Workspace w JOIN User u ON u.userId = :userId " +
             "WHERE u.email MEMBER OF w.participants AND w.owner != :userId")
     List<Workspace> findByParticipantsContainingAndNotOwner(String userId);
+    
+    boolean existsByWorkspaceNameAndOwnerAndType(String workspaceName, String owner, String type);
 }

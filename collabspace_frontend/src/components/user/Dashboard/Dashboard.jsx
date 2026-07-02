@@ -132,7 +132,8 @@ const newWorkspace = {
       navigate(`/workspace/${workspaceType}/${response.data.workspaceId}`);
     } catch (error) {
       console.error("Error creating workspace:", error);
-      toast.error("Failed to create workspace.");
+      const message = error.response?.data?.message || error.response?.data || "Failed to create workspace.";
+  toast.error(message);
     } finally {
       setLoading(false);
     }
