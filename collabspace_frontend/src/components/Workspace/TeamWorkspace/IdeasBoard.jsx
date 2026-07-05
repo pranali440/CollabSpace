@@ -9,6 +9,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } 
 const IdeasBoard = ({ workspaceId, currentUser, isLeader, ideas, setIdeas, wsRef, getUserDisplayName }) => {
   const [newIdea, setNewIdea] = useState({ title: "", description: "" });
   const [showIdeaPopup, setShowIdeaPopup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ prevent duplicate submissions
 
   // Fetch ideas
   useEffect(() => {
@@ -29,6 +30,9 @@ const IdeasBoard = ({ workspaceId, currentUser, isLeader, ideas, setIdeas, wsRef
       toast.error("Title and description are required.");
       return;
     }
+    if (isSubmitting) return; // ✅ block if already submitting
+    setIsSubmitting(true);    // ✅ lock button
+
     const ideaPayload = {
       ...newIdea,
       workspaceId,
@@ -51,6 +55,8 @@ const IdeasBoard = ({ workspaceId, currentUser, isLeader, ideas, setIdeas, wsRef
     } catch (error) {
       console.error("Error creating idea:", error);
       toast.error("Failed to create idea.");
+    } finally {
+      setIsSubmitting(false); // ✅ unlock after done
     }
   };
 
@@ -207,9 +213,9 @@ const IdeasBoard = ({ workspaceId, currentUser, isLeader, ideas, setIdeas, wsRef
             onClick={handleIdeaSubmit}
             variant="contained"
             color="primary"
-            disabled={!newIdea.title || !newIdea.description}
+            disabled={!newIdea.title || !newIdea.description || isSubmitting}
           >
-            Create Idea
+            {isSubmitting ? "Creating..." : "Create Idea"}
           </Button>
         </DialogActions>
       </Dialog>

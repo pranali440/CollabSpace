@@ -200,9 +200,11 @@ const TeamDashboard = () => {
               setPermissions(message.data);
               toast.success("Permissions updated!");
               break;
-            case "IDEA_CREATED":
-              setIdeas((prev) => [...prev, message.data]);
-              break;
+           case "IDEA_CREATED":
+  if (message.data.createdBy !== currentUser?.username) {
+    setIdeas((prev) => [...prev, message.data]);
+  }
+  break;
             case "IDEA_UPDATED":
               setIdeas((prev) =>
                 prev.map((idea) => (idea.id === message.data.id ? message.data : idea))
